@@ -1,0 +1,57 @@
+@startuml
+skinparam backgroundColor #1E1E2E
+skinparam defaultFontColor #E0E0E0
+skinparam ArrowColor #A0A8C0
+skinparam class {
+  BackgroundColor #2A2D3E
+  BorderColor #7AA2F7
+}
+
+title Assinaturas Internacionais - Abstract Factory
+
+interface FabricaAssinatura {
+  + criarComprovanteFiscal() : ComprovanteFiscal
+  + criarPagamento() : Pagamento
+  + criarTermoPrivacidade() : TermoPrivacidade
+}
+interface ComprovanteFiscal {
+  + gerar(valor : double) : String
+}
+interface Pagamento {
+  + processar(valor : double) : String
+}
+interface TermoPrivacidade {
+  + descricao() : String
+}
+
+class Assinatura {
+  - fabrica : FabricaAssinatura
+  + Assinatura(fabrica : FabricaAssinatura)
+  + ativar(cliente : String, valor : double) : void
+}
+class Main
+
+FabricaAssinatura <|.. FabricaBrasil
+FabricaAssinatura <|.. FabricaMexico
+ComprovanteFiscal <|.. NotaFiscalServico
+ComprovanteFiscal <|.. ComprovanteCfdi
+Pagamento <|.. PagamentoPix
+Pagamento <|.. PagamentoSpei
+TermoPrivacidade <|.. TermoLgpd
+TermoPrivacidade <|.. TermoLfpdppp
+
+FabricaBrasil ..> NotaFiscalServico : <<create>>
+FabricaBrasil ..> PagamentoPix : <<create>>
+FabricaBrasil ..> TermoLgpd : <<create>>
+FabricaMexico ..> ComprovanteCfdi : <<create>>
+FabricaMexico ..> PagamentoSpei : <<create>>
+FabricaMexico ..> TermoLfpdppp : <<create>>
+
+Assinatura o--> FabricaAssinatura
+Assinatura ..> ComprovanteFiscal
+Assinatura ..> Pagamento
+Assinatura ..> TermoPrivacidade
+Main ..> Assinatura
+Main ..> FabricaBrasil
+Main ..> FabricaMexico
+@enduml
